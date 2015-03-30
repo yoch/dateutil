@@ -2,6 +2,8 @@
 import datetime
 import calendar
 
+from warnings import warn
+
 from six import integer_types
 
 __all__ = ["relativedelta", "MO", "TU", "WE", "TH", "FR", "SA", "SU"]
@@ -165,6 +167,7 @@ Here is the behavior of operations with relativedelta:
             self.seconds = delta.seconds+delta.days*86400
             self.microseconds = delta.microseconds
         else:
+            # Relative information
             self.years = years
             self.months = months
             self.days = days + weeks * 7
@@ -173,6 +176,16 @@ Here is the behavior of operations with relativedelta:
             self.minutes = minutes
             self.seconds = seconds
             self.microseconds = microseconds
+
+            # Absolute information
+            if any(x is not None and int(x) != x
+                   for x in (year, month, day, hour, 
+                             minute, second, microsecond)):
+                # For now we'll deprecate floats - later it'll be an error.
+                warn("Non-integer value passed as absolute information. " +
+                     "This is not a well-defined condition and will raise " +
+                     "errors in future versions.", DeprecationWarning)
+
             self.year = year
             self.month = month
             self.day = day
