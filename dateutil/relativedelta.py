@@ -459,12 +459,13 @@ Here is the behavior of operations with relativedelta:
                      "hours", "minutes", "seconds", "microseconds"]:
             value = getattr(self, attr)
             if value:
-                l.append("%s=%+d" % (attr, value))
+                l.append("{attr}={value:+g}".format(attr=attr, value=value))
         for attr in ["year", "month", "day", "weekday",
                      "hour", "minute", "second", "microsecond"]:
             value = getattr(self, attr)
             if value is not None:
-                l.append("%s=%s" % (attr, repr(value)))
-        return "%s(%s)" % (self.__class__.__name__, ", ".join(l))
+                l.append("{attr}={value}".format(attr=attr, value=repr(value)))
+        return "{classname}({attrs})".format(classname=self.__class__.__name__,
+                                             attrs=", ".join(l))
 
 # vim:ts=4:sw=4:et
